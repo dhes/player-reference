@@ -49,6 +49,8 @@ import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
+import dev.ohs.player.generated.state.PatientCareTeamState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientMedicationState
@@ -107,6 +109,20 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
   val procedureRenderer =
     remember(registry) {
       registry.componentRenderer<PatientProcedureState>(ViewTypeCS.ProcedureItem)
+    }
+  val familyHistorySection =
+    remember(registry) {
+      registry.layoutRenderer<PatientFamilyHistoryState>(ViewTypeCS.SectionCard)
+    }
+  val familyHistoryRenderer =
+    remember(registry) {
+      registry.componentRenderer<PatientFamilyHistoryState>(ViewTypeCS.FamilyHistoryItem)
+    }
+  val careTeamSection =
+    remember(registry) { registry.layoutRenderer<PatientCareTeamState>(ViewTypeCS.SectionCard) }
+  val careTeamRenderer =
+    remember(registry) {
+      registry.componentRenderer<PatientCareTeamState>(ViewTypeCS.CareTeamItem)
     }
   val contactSection =
     remember(registry) { registry.layoutRenderer<PatientContactState>(ViewTypeCS.SectionCard) }
@@ -222,6 +238,24 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
           procedureSection.Render(
             items = s.procedures,
             component = procedureRenderer,
+            onItemClick = {},
+          )
+        }
+      }
+      if (s.familyHistory.isNotEmpty()) {
+        item(key = "family_history") {
+          familyHistorySection.Render(
+            items = s.familyHistory,
+            component = familyHistoryRenderer,
+            onItemClick = {},
+          )
+        }
+      }
+      if (s.careTeam.isNotEmpty()) {
+        item(key = "care_team") {
+          careTeamSection.Render(
+            items = s.careTeam,
+            component = careTeamRenderer,
             onItemClick = {},
           )
         }

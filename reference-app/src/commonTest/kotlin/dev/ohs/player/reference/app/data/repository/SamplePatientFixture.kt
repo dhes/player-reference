@@ -109,6 +109,43 @@ object SamplePatientFixture {
             "performedDateTime": "2010-09-20"
           }
         """,
+        """
+          {
+            "resourceType": "FamilyMemberHistory",
+            "id": "fmh-p1-a",
+            "status": "completed",
+            "patient": {"reference": "Patient/p1"},
+            "relationship": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+                  "code": "MTH",
+                  "display": "mother"
+                }
+              ]
+            },
+            "condition": [
+              {
+                "code": {"coding": [{"display": "Type 2 diabetes mellitus"}]},
+                "onsetAge": {"value": 55, "unit": "a", "system": "http://unitsofmeasure.org", "code": "a"}
+              }
+            ]
+          }
+        """,
+        """
+          {
+            "resourceType": "CareTeam",
+            "id": "ct-p1-a",
+            "status": "active",
+            "subject": {"reference": "Patient/p1"},
+            "participant": [
+              {
+                "role": [{"coding": [{"system": "http://snomed.info/sct", "code": "446050000", "display": "Primary care physician"}]}],
+                "member": {"reference": "Practitioner/pr1", "display": "Aisha Bello, M.D."}
+              }
+            ]
+          }
+        """,
       )
       .map { FhirJson.instance.decodeFromString(Resource.serializer(), it.trimIndent()) }
 }

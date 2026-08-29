@@ -16,9 +16,11 @@
 package dev.ohs.player.reference.app.feature.patient.profile
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -28,8 +30,10 @@ import dev.ohs.player.client.registry.registerComponent
 import dev.ohs.player.client.registry.registerLayout
 import dev.ohs.player.generated.config.AllergyItemConfig
 import dev.ohs.player.generated.config.AllergyReactionItemConfig
+import dev.ohs.player.generated.config.CareTeamItemConfig
 import dev.ohs.player.generated.config.ConditionItemConfig
 import dev.ohs.player.generated.config.ContactItemConfig
+import dev.ohs.player.generated.config.FamilyHistoryItemConfig
 import dev.ohs.player.generated.config.ImmunizationItemConfig
 import dev.ohs.player.generated.config.MedicationItemConfig
 import dev.ohs.player.generated.config.PatientHeaderConfig
@@ -38,6 +42,8 @@ import dev.ohs.player.generated.config.SectionCardConfig
 import dev.ohs.player.generated.config.TelecomItemConfig
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCareTeamState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
@@ -92,6 +98,16 @@ fun ViewRegistry.registerPatientProfile() {
     ProcedureItemRenderer(),
     ProcedureItemConfig(),
   )
+  registerComponent<PatientCareTeamState, CareTeamItemConfig>(
+    ViewTypeCS.CareTeamItem,
+    CareTeamItemRenderer(),
+    CareTeamItemConfig(),
+  )
+  registerComponent<PatientFamilyHistoryState, FamilyHistoryItemConfig>(
+    ViewTypeCS.FamilyHistoryItem,
+    FamilyHistoryItemRenderer(),
+    FamilyHistoryItemConfig(),
+  )
   registerLayout<PatientAllergyState>(
     ViewTypeCS.SectionCard,
     SectionCardLayoutRenderer(
@@ -129,6 +145,22 @@ fun ViewRegistry.registerPatientProfile() {
     SectionCardLayoutRenderer(
       title = "Procedures",
       icon = Icons.Default.Build,
+      config = SectionCardConfig(collapsible = true),
+    ),
+  )
+  registerLayout<PatientFamilyHistoryState>(
+    ViewTypeCS.SectionCard,
+    SectionCardLayoutRenderer(
+      title = "Family History",
+      icon = Icons.Default.Home,
+      config = SectionCardConfig(collapsible = true),
+    ),
+  )
+  registerLayout<PatientCareTeamState>(
+    ViewTypeCS.SectionCard,
+    SectionCardLayoutRenderer(
+      title = "Care Team",
+      icon = Icons.Default.AccountCircle,
       config = SectionCardConfig(collapsible = true),
     ),
   )

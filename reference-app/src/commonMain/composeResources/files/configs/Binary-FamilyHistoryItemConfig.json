@@ -1,0 +1,11 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewConfig",
+  "viewType": "FamilyHistoryItem",
+  "property": [
+    {
+      "name": "showOutcome",
+      "type": "boolean",
+      "valueBoolean": true
+    }
+  ]
+}

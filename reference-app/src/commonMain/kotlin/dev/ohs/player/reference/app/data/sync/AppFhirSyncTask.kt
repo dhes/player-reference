@@ -42,6 +42,8 @@ private val SYNC_RESOURCE_PARAMS: ResourceSearchParams =
     ResourceType.Procedure to emptyMap(),
     ResourceType.MedicationRequest to emptyMap(),
     ResourceType.MedicationStatement to emptyMap(),
+    ResourceType.FamilyMemberHistory to emptyMap(),
+    ResourceType.CareTeam to emptyMap(),
   )
 
 const val SYNC_TIMEOUT_DURATION = 120L

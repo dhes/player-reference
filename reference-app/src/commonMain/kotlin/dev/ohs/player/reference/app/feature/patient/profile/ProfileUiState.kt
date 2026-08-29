@@ -17,6 +17,8 @@ package dev.ohs.player.reference.app.feature.patient.profile
 
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCareTeamState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
@@ -33,6 +35,8 @@ data class ProfileUiState(
   val conditions: List<PatientConditionState> = emptyList(),
   val immunizations: List<PatientImmunizationState> = emptyList(),
   val procedures: List<PatientProcedureState> = emptyList(),
+  val familyHistory: List<PatientFamilyHistoryState> = emptyList(),
+  val careTeam: List<PatientCareTeamState> = emptyList(),
   val contacts: List<PatientContactState> = emptyList(),
   val telecoms: List<PatientTelecomState> = emptyList(),
 )

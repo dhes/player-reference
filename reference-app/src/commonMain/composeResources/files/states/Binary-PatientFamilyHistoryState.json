@@ -1,0 +1,16 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "joins": [
+    {
+      "view": "PatientSummary",
+      "from": "included",
+      "resource": "Patient",
+      "searchParam": "patient",
+      "matchKey": "fmhPatientRef"
+    }
+  ],
+  "name": "patientFamilyHistory",
+  "from": "revIncluded",
+  "resource": "FamilyMemberHistory",
+  "view": "FamilyHistory"
+}

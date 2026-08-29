@@ -68,7 +68,16 @@ class PatientProfileScreenTest {
       onAllNodesWithText("Amina Diallo").fetchSemanticsNodes().isNotEmpty()
     }
     val scrollable = onNode(hasScrollAction())
-    listOf("Amina Diallo", "Allergies", "Medications", "Conditions", "Immunizations", "Procedures")
+    listOf(
+        "Amina Diallo",
+        "Allergies",
+        "Medications",
+        "Conditions",
+        "Immunizations",
+        "Procedures",
+        "Family History",
+        "Care Team",
+      )
       .forEach { text
       ->
       scrollable.performScrollToNode(hasText(text, ignoreCase = true))

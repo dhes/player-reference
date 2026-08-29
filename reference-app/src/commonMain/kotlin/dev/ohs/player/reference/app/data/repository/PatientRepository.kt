@@ -19,6 +19,8 @@ import dev.ohs.fhir.model.r4.MedicationStatement
 import dev.ohs.fhir.model.r4.Procedure
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCareTeamState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
@@ -114,6 +116,8 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
               }
             }
             .sortedByDescending { it.performedDate?.toString() ?: "" },
+        familyHistory = extractor.extract<PatientFamilyHistoryState>(result),
+        careTeam = extractor.extract<PatientCareTeamState>(result),
         contacts =
           extractor.extract<PatientContactState>(result).filter {
             it.contactGivenName != null || it.contactFamilyName != null

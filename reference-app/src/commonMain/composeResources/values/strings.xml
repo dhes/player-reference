@@ -85,4 +85,7 @@
     <string name="immunization_given">Given %1$s</string>
     <string name="procedure_unknown">Unknown procedure</string>
     <string name="procedure_performed">Performed %1$s</string>
+    <string name="care_team_unknown">Unknown member</string>
+    <string name="family_history_unknown">Unknown condition</string>
+    <string name="family_history_onset_age">Onset age %1$s</string>
 </resources>

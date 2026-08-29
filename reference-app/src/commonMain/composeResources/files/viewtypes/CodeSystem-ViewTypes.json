@@ -41,6 +41,14 @@
       "display": "Procedure row"
     },
     {
+      "code": "CareTeamItem",
+      "display": "Care team member row"
+    },
+    {
+      "code": "FamilyHistoryItem",
+      "display": "Family history condition row"
+    },
+    {
       "code": "ContactItem",
       "display": "Emergency contact row"
     },

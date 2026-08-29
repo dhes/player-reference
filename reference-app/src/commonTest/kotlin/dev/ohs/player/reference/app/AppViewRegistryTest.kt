@@ -23,7 +23,9 @@ import dev.ohs.player.client.registry.layoutRenderer
 import dev.ohs.player.generated.state.GroupListState
 import dev.ohs.player.generated.state.GroupMemberState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCareTeamState
 import dev.ohs.player.generated.state.PatientConditionState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
 import dev.ohs.player.generated.state.PatientProcedureState
@@ -57,5 +59,7 @@ class AppViewRegistryTest {
     registry.componentRenderer<PatientConditionState>(ViewTypeCS.ConditionItem)
     registry.componentRenderer<PatientImmunizationState>(ViewTypeCS.ImmunizationItem)
     registry.componentRenderer<PatientProcedureState>(ViewTypeCS.ProcedureItem)
+    registry.componentRenderer<PatientFamilyHistoryState>(ViewTypeCS.FamilyHistoryItem)
+    registry.componentRenderer<PatientCareTeamState>(ViewTypeCS.CareTeamItem)
   }
 }

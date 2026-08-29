@@ -1,0 +1,11 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewConfig",
+  "viewType": "CareTeamItem",
+  "property": [
+    {
+      "name": "showRole",
+      "type": "boolean",
+      "valueBoolean": true
+    }
+  ]
+}

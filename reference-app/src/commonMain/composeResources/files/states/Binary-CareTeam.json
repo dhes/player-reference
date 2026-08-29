@@ -1,0 +1,46 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/CareTeam",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "careTeamId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "careTeamStatus",
+          "path": "status",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "careTeamPatientRef",
+          "path": "subject.reference.replace('Patient/', '')",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    },
+    {
+      "column": [
+        {
+          "name": "memberName",
+          "path": "member.display",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "roleName",
+          "path": "role.coding.display.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ],
+      "forEach": "participant"
+    }
+  ],
+  "name": "CareTeam",
+  "status": "active",
+  "resource": "CareTeam"
+}

@@ -16,7 +16,9 @@
 package dev.ohs.player.reference.app.data.datasource
 
 import dev.ohs.fhir.model.r4.AllergyIntolerance
+import dev.ohs.fhir.model.r4.CareTeam
 import dev.ohs.fhir.model.r4.Condition
+import dev.ohs.fhir.model.r4.FamilyMemberHistory
 import dev.ohs.fhir.model.r4.Group
 import dev.ohs.fhir.model.r4.Immunization
 import dev.ohs.fhir.model.r4.MedicationStatement
@@ -83,6 +85,18 @@ suspend fun patientProfileSearchResult(
       .filter { patientId(it.subject.reference?.value) == patientId }
       .takeIf { it.isNotEmpty() }
       ?.let { put("Procedure" to "subject", it) }
+    repository
+      .all("FamilyMemberHistory")
+      .filterIsInstance<FamilyMemberHistory>()
+      .filter { patientId(it.patient.reference?.value) == patientId }
+      .takeIf { it.isNotEmpty() }
+      ?.let { put("FamilyMemberHistory" to "patient", it) }
+    repository
+      .all("CareTeam")
+      .filterIsInstance<CareTeam>()
+      .filter { patientId(it.subject?.reference?.value) == patientId }
+      .takeIf { it.isNotEmpty() }
+      ?.let { put("CareTeam" to "patient", it) }
   }
   return SearchResult(
     resource = patient,
