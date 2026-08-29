@@ -39,6 +39,7 @@ private val SYNC_RESOURCE_PARAMS: ResourceSearchParams =
     ResourceType.Condition to emptyMap(),
     ResourceType.AllergyIntolerance to emptyMap(),
     ResourceType.Immunization to emptyMap(),
+    ResourceType.Procedure to emptyMap(),
     ResourceType.MedicationRequest to emptyMap(),
     ResourceType.MedicationStatement to emptyMap(),
   )

@@ -21,6 +21,7 @@ import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTelecomState
 
@@ -31,6 +32,7 @@ data class ProfileUiState(
   val medications: List<PatientMedicationState> = emptyList(),
   val conditions: List<PatientConditionState> = emptyList(),
   val immunizations: List<PatientImmunizationState> = emptyList(),
+  val procedures: List<PatientProcedureState> = emptyList(),
   val contacts: List<PatientContactState> = emptyList(),
   val telecoms: List<PatientTelecomState> = emptyList(),
 )

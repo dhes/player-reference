@@ -26,6 +26,7 @@ import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.viewtype.ViewTypeCS
 import kotlin.test.Test
@@ -55,5 +56,6 @@ class AppViewRegistryTest {
     registry.componentRenderer<PatientMedicationState>(ViewTypeCS.MedicationItem)
     registry.componentRenderer<PatientConditionState>(ViewTypeCS.ConditionItem)
     registry.componentRenderer<PatientImmunizationState>(ViewTypeCS.ImmunizationItem)
+    registry.componentRenderer<PatientProcedureState>(ViewTypeCS.ProcedureItem)
   }
 }

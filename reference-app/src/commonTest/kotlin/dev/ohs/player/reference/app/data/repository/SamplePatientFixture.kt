@@ -99,6 +99,16 @@ object SamplePatientFixture {
             "occurrenceDateTime": "1990-03-14"
           }
         """,
+        """
+          {
+            "resourceType": "Procedure",
+            "id": "proc-p1-a",
+            "status": "completed",
+            "code": {"coding": [{"display": "Appendectomy"}]},
+            "subject": {"reference": "Patient/p1"},
+            "performedDateTime": "2010-09-20"
+          }
+        """,
       )
       .map { FhirJson.instance.decodeFromString(Resource.serializer(), it.trimIndent()) }
 }

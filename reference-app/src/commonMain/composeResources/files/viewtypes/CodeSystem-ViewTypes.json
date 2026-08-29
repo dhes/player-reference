@@ -37,6 +37,10 @@
       "display": "Immunization row"
     },
     {
+      "code": "ProcedureItem",
+      "display": "Procedure row"
+    },
+    {
       "code": "ContactItem",
       "display": "Emergency contact row"
     },

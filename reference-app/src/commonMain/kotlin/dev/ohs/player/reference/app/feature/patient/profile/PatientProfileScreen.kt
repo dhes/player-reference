@@ -50,6 +50,7 @@ import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientMedicationState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTelecomState
@@ -100,6 +101,12 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
   val immunizationRenderer =
     remember(registry) {
       registry.componentRenderer<PatientImmunizationState>(ViewTypeCS.ImmunizationItem)
+    }
+  val procedureSection =
+    remember(registry) { registry.layoutRenderer<PatientProcedureState>(ViewTypeCS.SectionCard) }
+  val procedureRenderer =
+    remember(registry) {
+      registry.componentRenderer<PatientProcedureState>(ViewTypeCS.ProcedureItem)
     }
   val contactSection =
     remember(registry) { registry.layoutRenderer<PatientContactState>(ViewTypeCS.SectionCard) }
@@ -206,6 +213,15 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
           immunizationSection.Render(
             items = s.immunizations,
             component = immunizationRenderer,
+            onItemClick = {},
+          )
+        }
+      }
+      if (s.procedures.isNotEmpty()) {
+        item(key = "procedures") {
+          procedureSection.Render(
+            items = s.procedures,
+            component = procedureRenderer,
             onItemClick = {},
           )
         }

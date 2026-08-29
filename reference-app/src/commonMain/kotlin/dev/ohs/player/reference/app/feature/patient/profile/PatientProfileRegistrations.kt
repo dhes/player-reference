@@ -16,6 +16,7 @@
 package dev.ohs.player.reference.app.feature.patient.profile
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
@@ -32,6 +33,7 @@ import dev.ohs.player.generated.config.ContactItemConfig
 import dev.ohs.player.generated.config.ImmunizationItemConfig
 import dev.ohs.player.generated.config.MedicationItemConfig
 import dev.ohs.player.generated.config.PatientHeaderConfig
+import dev.ohs.player.generated.config.ProcedureItemConfig
 import dev.ohs.player.generated.config.SectionCardConfig
 import dev.ohs.player.generated.config.TelecomItemConfig
 import dev.ohs.player.generated.state.AllergyReactionState
@@ -40,6 +42,7 @@ import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTelecomState
 import dev.ohs.player.generated.viewtype.ViewTypeCS
@@ -84,6 +87,11 @@ fun ViewRegistry.registerPatientProfile() {
     ImmunizationItemRenderer(),
     ImmunizationItemConfig(),
   )
+  registerComponent<PatientProcedureState, ProcedureItemConfig>(
+    ViewTypeCS.ProcedureItem,
+    ProcedureItemRenderer(),
+    ProcedureItemConfig(),
+  )
   registerLayout<PatientAllergyState>(
     ViewTypeCS.SectionCard,
     SectionCardLayoutRenderer(
@@ -113,6 +121,14 @@ fun ViewRegistry.registerPatientProfile() {
     SectionCardLayoutRenderer(
       title = "Immunizations",
       icon = Icons.Default.CheckCircle,
+      config = SectionCardConfig(collapsible = true),
+    ),
+  )
+  registerLayout<PatientProcedureState>(
+    ViewTypeCS.SectionCard,
+    SectionCardLayoutRenderer(
+      title = "Procedures",
+      icon = Icons.Default.Build,
       config = SectionCardConfig(collapsible = true),
     ),
   )

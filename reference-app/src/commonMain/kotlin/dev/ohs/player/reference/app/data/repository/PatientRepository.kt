@@ -16,12 +16,14 @@
 package dev.ohs.player.reference.app.data.repository
 
 import dev.ohs.fhir.model.r4.MedicationStatement
+import dev.ohs.fhir.model.r4.Procedure
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTelecomState
 import dev.ohs.player.reference.app.data.Extraction.extractor
@@ -89,6 +91,29 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
             // ISO-8601 string form sorts chronologically; undated entries sink to the bottom.
             it.occurrenceDate?.toString() ?: ""
           },
+        procedures =
+          extractor.extract<PatientProcedureState>(result)
+            // WORKAROUND for kotlin-fhirpath: the bare `performed` choice path evaluates to
+            // empty (same shorthand issue as Immunization.occurrence), so the ViewDefinition's
+            // performedDate column never populates. Fill it from the raw resources until fixed
+            // upstream; Period-valued procedures use the period start.
+            .let { states ->
+              val dateById =
+                result.revIncluded
+                  .orEmpty()
+                  .values
+                  .flatten()
+                  .filterIsInstance<Procedure>()
+                  .associate { p ->
+                    p.id to
+                      (p.performed?.asDateTime()?.value?.value
+                        ?: p.performed?.asPeriod()?.value?.start?.value)
+                  }
+              states.map { s ->
+                if (s.performedDate == null) s.copy(performedDate = dateById[s.procedureId]) else s
+              }
+            }
+            .sortedByDescending { it.performedDate?.toString() ?: "" },
         contacts =
           extractor.extract<PatientContactState>(result).filter {
             it.contactGivenName != null || it.contactFamilyName != null
