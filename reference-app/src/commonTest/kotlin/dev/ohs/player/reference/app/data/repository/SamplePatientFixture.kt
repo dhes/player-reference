@@ -67,13 +67,12 @@ object SamplePatientFixture {
         """,
         """
           {
-            "resourceType": "MedicationRequest",
+            "resourceType": "MedicationStatement",
             "id": "med-p1-a",
             "status": "active",
-            "intent": "order",
             "subject": {"reference": "Patient/p1"},
             "medicationCodeableConcept": {"coding": [{"display": "Salbutamol 100mcg inhaler"}]},
-            "dosageInstruction": [{"text": "100mcg PRN"}]
+            "dosage": [{"text": "100mcg PRN"}]
           }
         """,
         """

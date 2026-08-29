@@ -15,6 +15,7 @@
  */
 package dev.ohs.player.reference.app.data.repository
 
+import dev.ohs.fhir.model.r4.MedicationStatement
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientConditionState
@@ -63,8 +64,26 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
         patient = extractor.extract<PatientSummaryState>(result).firstOrNull(),
         allergies = extractor.extract<PatientAllergyState>(result),
         allergyReactions = extractor.extract<AllergyReactionState>(result),
-        medications = extractor.extract<PatientMedicationState>(result),
-        conditions = extractor.extract<PatientConditionState>(result),
+        medications =
+          extractor.extract<PatientMedicationState>(result)
+            // WORKAROUND for kotlin-fhirpath: paths into Dosage evaluate to empty (the
+            // `is BackboneElement` dispatch arm shadows `is Dosage`), so the ViewDefinition's
+            // dosage column never populates. Fill it from the raw resources until fixed upstream.
+            .let { states ->
+              val sigById =
+                result.revIncluded
+                  .orEmpty()
+                  .values
+                  .flatten()
+                  .filterIsInstance<MedicationStatement>()
+                  .associate { it.id to it.dosage.firstOrNull()?.text?.value }
+              states.map { s -> if (s.dosage == null) s.copy(dosage = sigById[s.medicationId]) else s }
+            }
+            .sortedBy { it.medStatus != "active" },
+        conditions =
+          extractor.extract<PatientConditionState>(result).sortedBy {
+            it.conditionStatus != "active"
+          },
         immunizations =
           extractor.extract<PatientImmunizationState>(result).sortedByDescending {
             // ISO-8601 string form sorts chronologically; undated entries sink to the bottom.

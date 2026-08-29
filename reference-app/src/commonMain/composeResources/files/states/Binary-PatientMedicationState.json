@@ -11,6 +11,6 @@
   ],
   "name": "patientMedication",
   "from": "revIncluded",
-  "resource": "MedicationRequest",
+  "resource": "MedicationStatement",
   "view": "Medication"
 }

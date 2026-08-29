@@ -40,6 +40,7 @@ private val SYNC_RESOURCE_PARAMS: ResourceSearchParams =
     ResourceType.AllergyIntolerance to emptyMap(),
     ResourceType.Immunization to emptyMap(),
     ResourceType.MedicationRequest to emptyMap(),
+    ResourceType.MedicationStatement to emptyMap(),
   )
 
 const val SYNC_TIMEOUT_DURATION = 120L

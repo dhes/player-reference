@@ -19,7 +19,7 @@ import dev.ohs.fhir.model.r4.AllergyIntolerance
 import dev.ohs.fhir.model.r4.Condition
 import dev.ohs.fhir.model.r4.Group
 import dev.ohs.fhir.model.r4.Immunization
-import dev.ohs.fhir.model.r4.MedicationRequest
+import dev.ohs.fhir.model.r4.MedicationStatement
 import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Resource
 import dev.ohs.player.client.model.SearchResult
@@ -59,11 +59,11 @@ suspend fun patientProfileSearchResult(
       .takeIf { it.isNotEmpty() }
       ?.let { put("AllergyIntolerance" to "patient", it) }
     repository
-      .all("MedicationRequest")
-      .filterIsInstance<MedicationRequest>()
+      .all("MedicationStatement")
+      .filterIsInstance<MedicationStatement>()
       .filter { patientId(it.subject.reference?.value) == patientId }
       .takeIf { it.isNotEmpty() }
-      ?.let { put("MedicationRequest" to "subject", it) }
+      ?.let { put("MedicationStatement" to "subject", it) }
     repository
       .all("Condition")
       .filterIsInstance<Condition>()

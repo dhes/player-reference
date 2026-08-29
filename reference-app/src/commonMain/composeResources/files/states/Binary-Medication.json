@@ -14,12 +14,12 @@
         },
         {
           "name": "medicationName",
-          "path": "medication.coding.display.first()",
+          "path": "iif(medication.coding.display.exists(), medication.coding.display.first(), medication.text)",
           "type": "http://hl7.org/fhir/StructureDefinition/string"
         },
         {
           "name": "dosage",
-          "path": "dosageInstruction.text.first()",
+          "path": "dosage.first().text",
           "type": "http://hl7.org/fhir/StructureDefinition/string"
         },
         {
@@ -37,5 +37,5 @@
   ],
   "name": "Medication",
   "status": "active",
-  "resource": "MedicationRequest"
+  "resource": "MedicationStatement"
 }
