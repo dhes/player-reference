@@ -103,9 +103,9 @@ fun App() {
                     onGroupClick = { id -> navController.navigate("groupProfile/$id") },
                     onDataCaptureClick = {
                       navController.navigate(
-                        questionnaireHostRoute(
-                          questionnaireId = QuestionnaireIds.HOUSEHOLD_REGISTRATION
-                        )
+                        // PROBE (temporary): WHO smart-immunizations QIMMZC4 instead of
+                        // household registration.
+                        questionnaireHostRoute(questionnaireId = QuestionnaireIds.WHO_IMMZ_C4)
                       )
                     },
                     onAddMembers = { groupId ->

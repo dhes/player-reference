@@ -56,6 +56,7 @@ object QuestionnaireIds {
   const val HOUSEHOLD_REGISTRATION = "household-registration"
   const val HOUSEHOLD_MEMBERS = "household-members"
   const val PATIENT_CLINICAL_DATA = "patient-clinical-data"
+  const val WHO_IMMZ_C4 = "QIMMZC4"
 }
 
 /** Bundled Questionnaire JSON, keyed by the id it should be read under. */
@@ -65,6 +66,7 @@ private val BUNDLED_QUESTIONNAIRE_PATHS: Map<String, String> =
       "files/configs/Questionnaire-HouseholdRegistration.json",
     QuestionnaireIds.HOUSEHOLD_MEMBERS to "files/configs/Questionnaire-HouseholdMembers.json",
     QuestionnaireIds.PATIENT_CLINICAL_DATA to "files/configs/Questionnaire-PatientClinicalData.json",
+    QuestionnaireIds.WHO_IMMZ_C4 to "files/configs/Questionnaire-QIMMZC4.json",
   )
 
 /** Launch-context values a questionnaire can opt into prepopulating, by linkId. */
@@ -151,6 +153,20 @@ class QuestionnaireService(private val repository: FhirRepository) {
 
       QuestionnaireIds.PATIENT_CLINICAL_DATA ->
         submitClinicalData(questionnaire, response, launchContext)
+
+      QuestionnaireIds.WHO_IMMZ_C4 -> {
+        // Probe: extract via the templateExtract retrofit and report, without persisting.
+        val bundle = TemplateExtractionEngine.extract(questionnaire, response)
+        val resourceTypes =
+          bundle.entry.mapNotNull { it.resource }.joinToString { it::class.simpleName ?: "?" }
+        QuestionnaireSubmissionResult(
+          savedResourceCount = 0,
+          bundleJson = fhirJson.encodeToString(Bundle.serializer(), bundle),
+          successMessage =
+            "Template extraction produced ${bundle.entry.size} resource(s): $resourceTypes. " +
+              "Not persisted (probe).",
+        )
+      }
 
       else -> error("No submission handling is defined for questionnaire '${questionnaire.id}'.")
     }
