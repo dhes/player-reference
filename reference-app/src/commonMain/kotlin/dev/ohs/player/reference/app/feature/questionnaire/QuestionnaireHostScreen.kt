@@ -90,7 +90,7 @@ fun QuestionnaireHostScreen(
 
   LaunchedEffect(uiState) {
     if (uiState !is QuestionnaireHostUiState.Submitted) return@LaunchedEffect
-    delay(2_000.milliseconds)
+    delay(5_000.milliseconds)
     onBack()
   }
   val title =
