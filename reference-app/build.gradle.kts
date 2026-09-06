@@ -113,6 +113,7 @@ kotlin {
       implementation(libs.ohs.fhir.model)
       implementation(libs.ohs.fhir.path)
       implementation(libs.fhir.data.capture)
+      implementation(libs.fmlrunner)
       // Auth: shared OAuth2/PKCE client, secure session storage, SHA-256 for PKCE.
       implementation(libs.ktor.client.core)
       implementation(libs.ktor.client.auth)

@@ -155,16 +155,21 @@ class QuestionnaireService(private val repository: FhirRepository) {
         submitClinicalData(questionnaire, response, launchContext)
 
       QuestionnaireIds.WHO_IMMZ_C4 -> {
-        // Probe: extract via the templateExtract retrofit and report, without persisting.
-        val bundle = TemplateExtractionEngine.extract(questionnaire, response)
+        // Probe: StructureMap-based extraction via fmlrunner, executing WHO's
+        // published IMMZ.C4 maps verbatim. Reported, not persisted.
+        val bundleJson =
+          FmlExtractionService.extractImmzC4(
+            fhirJson.encodeToString(QuestionnaireResponse.serializer(), response)
+          )
+        val bundle = fhirJson.decodeFromString(Bundle.serializer(), bundleJson)
         val resourceTypes =
           bundle.entry.mapNotNull { it.resource }.joinToString { it::class.simpleName ?: "?" }
         QuestionnaireSubmissionResult(
           savedResourceCount = 0,
           bundleJson = fhirJson.encodeToString(Bundle.serializer(), bundle),
           successMessage =
-            "Template extraction produced ${bundle.entry.size} resource(s): $resourceTypes. " +
-              "Not persisted (probe).",
+            "FML (StructureMap) extraction via fmlrunner produced ${bundle.entry.size} " +
+              "resource(s): $resourceTypes. Not persisted (probe).",
         )
       }
 
