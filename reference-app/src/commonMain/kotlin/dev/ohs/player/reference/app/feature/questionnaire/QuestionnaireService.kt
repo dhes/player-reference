@@ -164,6 +164,9 @@ class QuestionnaireService(private val repository: FhirRepository) {
         val bundle = fhirJson.decodeFromString(Bundle.serializer(), bundleJson)
         val resourceTypes =
           bundle.entry.mapNotNull { it.resource }.joinToString { it::class.simpleName ?: "?" }
+        // Probe visibility: the snackbar is transient; the full extracted
+        // bundle goes to stdout for inspection/demo capture.
+        println("=== FML extraction (IMMZ.C4.QRToPatient) ===\n$bundleJson")
         QuestionnaireSubmissionResult(
           savedResourceCount = 0,
           bundleJson = fhirJson.encodeToString(Bundle.serializer(), bundle),
