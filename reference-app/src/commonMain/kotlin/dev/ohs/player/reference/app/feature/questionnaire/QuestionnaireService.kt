@@ -155,24 +155,26 @@ class QuestionnaireService(private val repository: FhirRepository) {
         submitClinicalData(questionnaire, response, launchContext)
 
       QuestionnaireIds.WHO_IMMZ_C4 -> {
-        // Probe: StructureMap-based extraction via fmlrunner, executing WHO's
-        // published IMMZ.C4 maps verbatim. Reported, not persisted.
+        // StructureMap-based extraction via fmlrunner, executing WHO's published
+        // IMMZ.C4 maps verbatim, then persisting the produced bundle. The map
+        // already assigns resource ids and wires RelatedPerson.patient to the
+        // Patient, so the bundle persists as-is (no household — C4 is
+        // patient-centered; the Clients register surfaces it).
         val bundleJson =
           FmlExtractionService.extractImmzC4(
             fhirJson.encodeToString(QuestionnaireResponse.serializer(), response)
           )
         val bundle = fhirJson.decodeFromString(Bundle.serializer(), bundleJson)
+        println("=== FML extraction (IMMZ.C4.QRToPatient) ===\n$bundleJson")
         val resourceTypes =
           bundle.entry.mapNotNull { it.resource }.joinToString { it::class.simpleName ?: "?" }
-        // Probe visibility: the snackbar is transient; the full extracted
-        // bundle goes to stdout for inspection/demo capture.
-        println("=== FML extraction (IMMZ.C4.QRToPatient) ===\n$bundleJson")
+        val savedResourceCount = repository.upsert(bundle)
         QuestionnaireSubmissionResult(
-          savedResourceCount = 0,
+          savedResourceCount = savedResourceCount,
           bundleJson = fhirJson.encodeToString(Bundle.serializer(), bundle),
           successMessage =
-            "FML (StructureMap) extraction via fmlrunner produced ${bundle.entry.size} " +
-              "resource(s): $resourceTypes. Not persisted (probe).",
+            "FML (StructureMap) extraction via fmlrunner produced and saved " +
+              "$savedResourceCount resource(s): $resourceTypes. See the Clients register.",
         )
       }
 

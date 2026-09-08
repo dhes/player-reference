@@ -79,6 +79,7 @@ import androidx.window.core.layout.WindowSizeClass
 import dev.ohs.player.reference.app.feature.group.list.GroupListScreen
 import dev.ohs.player.reference.app.feature.group.list.LocalSelectedGroupId
 import dev.ohs.player.reference.app.feature.group.profile.GroupProfileScreen
+import dev.ohs.player.reference.app.feature.patient.list.PatientListScreen
 import dev.ohs.player.reference.app.feature.patient.profile.PatientProfileScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -101,6 +102,7 @@ import player_reference.reference_app.generated.resources.home_sync_now
 fun HomeScreen(
   userName: String,
   onGroupClick: (String) -> Unit,
+  onPatientClick: (String) -> Unit,
   onDataCaptureClick: () -> Unit,
   onAddMembers: (String) -> Unit,
   onAddClinicalData: (String) -> Unit,
@@ -292,6 +294,30 @@ fun HomeScreen(
             }
           } else {
             GroupListScreen(onGroupClick = onGroupClick, onDataCaptureClick = onDataCaptureClick)
+          }
+
+        HomeDestination.Clients ->
+          if (isExpandedWidth) {
+            Row(modifier = Modifier.fillMaxSize()) {
+              Box(modifier = Modifier.weight(1f).fillMaxSize()) {
+                PatientListScreen(onPatientClick = { selectedPatientId = it })
+              }
+              VerticalDivider()
+              Box(modifier = Modifier.weight(1.5f).fillMaxSize()) {
+                val patientId = selectedPatientId
+                if (patientId != null) {
+                  PatientProfileScreen(
+                    patientId = patientId,
+                    onBack = { selectedPatientId = null },
+                    onAddClinicalData = { onAddClinicalData(patientId) },
+                  )
+                } else {
+                  EmptyDetailPlaceholder()
+                }
+              }
+            }
+          } else {
+            PatientListScreen(onPatientClick = onPatientClick)
           }
       }
     }

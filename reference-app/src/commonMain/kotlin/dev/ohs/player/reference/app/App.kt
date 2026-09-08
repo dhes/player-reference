@@ -101,6 +101,7 @@ fun App() {
                   HomeScreen(
                     userName = userName,
                     onGroupClick = { id -> navController.navigate("groupProfile/$id") },
+                    onPatientClick = { id -> navController.navigate("patientProfile/$id") },
                     onDataCaptureClick = {
                       navController.navigate(
                         // PROBE (temporary): WHO smart-immunizations QIMMZC4 instead of

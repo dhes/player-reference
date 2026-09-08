@@ -17,15 +17,19 @@ package dev.ohs.player.reference.app.feature.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.StringResource
 import player_reference.reference_app.generated.resources.Res
+import player_reference.reference_app.generated.resources.home_destination_clients
 import player_reference.reference_app.generated.resources.home_destination_households
 
 /**
- * A top-level destination reachable from [HomeScreen]'s navigation drawer. `Households` is the only
- * entry today; adding a second destination later is a new enum entry, not a rewrite.
+ * A top-level destination reachable from [HomeScreen]'s navigation drawer. `Households` is the
+ * OpenSRP-heritage register; `Clients` is the patient-centered register that surfaces WHO DAK
+ * registrations (e.g. IMMZ.C4), which produce Patient/RelatedPerson without a Group.
  */
 enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
-  Households(label = Res.string.home_destination_households, icon = Icons.Filled.Home)
+  Households(label = Res.string.home_destination_households, icon = Icons.Filled.Home),
+  Clients(label = Res.string.home_destination_clients, icon = Icons.Filled.Person),
 }

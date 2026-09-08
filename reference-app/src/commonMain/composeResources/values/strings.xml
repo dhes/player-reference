@@ -17,6 +17,7 @@
 
     <!-- Home screen -->
     <string name="home_destination_households">Households</string>
+    <string name="home_destination_clients">Clients</string>
     <string name="home_registers">Registers</string>
     <string name="home_signed_in">Signed in</string>
     <string name="home_last_synced">Last synced: %1$s</string>
