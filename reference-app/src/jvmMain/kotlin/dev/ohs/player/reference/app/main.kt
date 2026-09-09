@@ -29,6 +29,8 @@ import dev.ohs.player.reference.app.data.di.initKoin
 import dev.ohs.player.reference.app.data.sync.ForegroundSyncManager
 import dev.ohs.player.reference.app.data.sync.SYNC_TIMEOUT_DURATION
 import dev.ohs.player.reference.app.data.sync.SyncManager
+import dev.ohs.player.reference.app.feature.patient.due.CqlImmunizationDueEvaluator
+import dev.ohs.player.reference.app.feature.patient.due.ImmunizationDueEvaluator
 import org.jetbrains.compose.resources.painterResource
 import org.koin.dsl.module
 import player_reference.reference_app.generated.resources.Res
@@ -56,6 +58,8 @@ fun main() = application {
     module {
       single<FhirEngine> { FhirEngineProvider.getInstance() }
       single<SyncManager> { ForegroundSyncManager() }
+      // Verbatim CQL due-chip evaluator — desktop only (cxca-cql/cqframework has no iOS/js).
+      single<ImmunizationDueEvaluator> { CqlImmunizationDueEvaluator }
     }
   )
   Window(

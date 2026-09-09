@@ -15,14 +15,16 @@
  */
 package dev.ohs.player.reference.app.data.repository
 
+import dev.ohs.fhir.model.r4.Immunization
 import dev.ohs.fhir.model.r4.MedicationStatement
+import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Procedure
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
 import dev.ohs.player.generated.state.PatientCareTeamState
-import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
+import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientImmunizationState
 import dev.ohs.player.generated.state.PatientMedicationState
 import dev.ohs.player.generated.state.PatientProcedureState
@@ -69,7 +71,8 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
         allergies = extractor.extract<PatientAllergyState>(result),
         allergyReactions = extractor.extract<AllergyReactionState>(result),
         medications =
-          extractor.extract<PatientMedicationState>(result)
+          extractor
+            .extract<PatientMedicationState>(result)
             // WORKAROUND for kotlin-fhirpath: paths into Dosage evaluate to empty (the
             // `is BackboneElement` dispatch arm shadows `is Dosage`), so the ViewDefinition's
             // dosage column never populates. Fill it from the raw resources until fixed upstream.
@@ -81,7 +84,9 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
                   .flatten()
                   .filterIsInstance<MedicationStatement>()
                   .associate { it.id to it.dosage.firstOrNull()?.text?.value }
-              states.map { s -> if (s.dosage == null) s.copy(dosage = sigById[s.medicationId]) else s }
+              states.map { s ->
+                if (s.dosage == null) s.copy(dosage = sigById[s.medicationId]) else s
+              }
             }
             .sortedBy { it.medStatus != "active" },
         conditions =
@@ -94,7 +99,8 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
             it.occurrenceDate?.toString() ?: ""
           },
         procedures =
-          extractor.extract<PatientProcedureState>(result)
+          extractor
+            .extract<PatientProcedureState>(result)
             // WORKAROUND for kotlin-fhirpath: the bare `performed` choice path evaluates to
             // empty (same shorthand issue as Immunization.occurrence), so the ViewDefinition's
             // performedDate column never populates. Fill it from the raw resources until fixed
@@ -125,4 +131,17 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
         telecoms = extractor.extract<PatientTelecomState>(result).filter { it.telecomValue != null },
       )
     }
+
+  /**
+   * Raw Patient plus its Immunizations, for decision-support (CQL) evaluation — the model, not the
+   * rendered view states [getPatientProfile] returns. Null when the patient is absent.
+   */
+  suspend fun patientWithImmunizations(patientId: String): Pair<Patient, List<Immunization>>? {
+    val patient = fhirRepository.get("Patient", patientId) as? Patient ?: return null
+    val immunizations =
+      fhirRepository.all("Immunization").filterIsInstance<Immunization>().filter {
+        it.patient.reference?.value?.substringAfterLast('/') == patientId
+      }
+    return patient to immunizations
+  }
 }

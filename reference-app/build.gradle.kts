@@ -32,6 +32,19 @@ plugins {
   id("spotless-conventions")
 }
 
+// cxca-cql (the verbatim CQL evaluator, jvm-only here) pulls cql-to-elm, compiled against
+// antlr-kotlin 1.0.3; the app's fhir-path pulls 1.0.10, whose Interval API is binary-
+// incompatible. Pin 1.0.3 — but only on the jvm classpaths, the only place both coexist
+// (cxca-cql adds no non-jvm variant to this app). Other targets keep fhir-path's 1.0.10.
+configurations
+  .matching { it.name.startsWith("jvm") }
+  .configureEach {
+    resolutionStrategy {
+      force("com.strumenta:antlr-kotlin-runtime:1.0.3")
+      force("com.strumenta:antlr-kotlin-runtime-jvm:1.0.3")
+    }
+  }
+
 kotlin {
   // Desktop, js and wasmJs lack a native OS background scheduler, so they share a "foregroundSync"
   // source set (see `foregroundSyncMain/.../data/sync/Sync.kt`) letting one coroutine-based
@@ -151,6 +164,10 @@ kotlin {
       implementation(compose.desktop.currentOs)
       implementation(libs.kotlinx.coroutinesSwing)
       implementation(libs.ktor.client.cio)
+      // Verbatim CQL evaluator (mavenLocal). jvm-only: cxca-cql has no iOS/js variant, so the
+      // due-chip is desktop-scoped for this slice. Transitively brings the cqframework v5
+      // engine + dev.ohs.fhir:workflow; its fhir-model pin (beta05) matches the app's.
+      implementation("health.hopena.cxca:cxca-cql:0.1.0")
     }
     jvmTest.dependencies {
       implementation(compose.desktop.currentOs)

@@ -85,7 +85,7 @@ internal val authModule = module {
 
 internal val viewModelModule = module {
   viewModel { PatientListViewModel(get()) }
-  viewModel { (patientId: String) -> PatientProfileViewModel(patientId, get()) }
+  viewModel { (patientId: String) -> PatientProfileViewModel(patientId, get(), getOrNull()) }
   viewModel { GroupListViewModel(get()) }
   viewModel { (groupId: String) -> GroupProfileViewModel(groupId, get()) }
   viewModel { (questionnaireId: String, launchContext: QuestionnaireLaunchContext) ->

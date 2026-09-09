@@ -24,6 +24,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -47,16 +49,17 @@ import dev.ohs.player.client.registry.layoutRenderer
 import dev.ohs.player.client.renderer.RenderOptions
 import dev.ohs.player.generated.state.AllergyReactionState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCareTeamState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientContactState
-import dev.ohs.player.generated.state.PatientCareTeamState
 import dev.ohs.player.generated.state.PatientFamilyHistoryState
 import dev.ohs.player.generated.state.PatientImmunizationState
-import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientMedicationState
+import dev.ohs.player.generated.state.PatientProcedureState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTelecomState
 import dev.ohs.player.generated.viewtype.ViewTypeCS
+import dev.ohs.player.reference.app.feature.patient.due.ImmunizationDue
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -72,6 +75,7 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
   val viewModel =
     koinViewModel<PatientProfileViewModel>(key = patientId) { parametersOf(patientId) }
   val state by viewModel.uiState.collectAsStateWithLifecycle()
+  val due by viewModel.due.collectAsStateWithLifecycle()
   val registry = LocalViewRegistry.current
 
   val headerRenderer =
@@ -121,9 +125,7 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
   val careTeamSection =
     remember(registry) { registry.layoutRenderer<PatientCareTeamState>(ViewTypeCS.SectionCard) }
   val careTeamRenderer =
-    remember(registry) {
-      registry.componentRenderer<PatientCareTeamState>(ViewTypeCS.CareTeamItem)
-    }
+    remember(registry) { registry.componentRenderer<PatientCareTeamState>(ViewTypeCS.CareTeamItem) }
   val contactSection =
     remember(registry) { registry.layoutRenderer<PatientContactState>(ViewTypeCS.SectionCard) }
   val contactRenderer =
@@ -192,6 +194,10 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
     ) {
       item(key = "patient_header") { headerRenderer.Render(s.patient, RenderOptions()) }
 
+      due?.let { recommendation ->
+        item(key = "immunization_due") { ImmunizationDueChip(recommendation) }
+      }
+
       if (s.allergies.isNotEmpty()) {
         item(key = "allergies") {
           allergySection.Render(items = s.allergies, component = allergyRenderer, onItemClick = {})
@@ -253,11 +259,7 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
       }
       if (s.careTeam.isNotEmpty()) {
         item(key = "care_team") {
-          careTeamSection.Render(
-            items = s.careTeam,
-            component = careTeamRenderer,
-            onItemClick = {},
-          )
+          careTeamSection.Render(items = s.careTeam, component = careTeamRenderer, onItemClick = {})
         }
       }
       if (s.telecoms.isNotEmpty()) {
@@ -272,4 +274,22 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
       }
     }
   }
+}
+
+/**
+ * A recommendation chip for a due vaccine, computed by verbatim CQL. Non-interactive: it surfaces a
+ * decision, it doesn't perform one.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ImmunizationDueChip(recommendation: ImmunizationDue) {
+  AssistChip(
+    onClick = {},
+    label = { Text("Due: ${recommendation.label}") },
+    colors =
+      AssistChipDefaults.assistChipColors(
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
+      ),
+  )
 }
