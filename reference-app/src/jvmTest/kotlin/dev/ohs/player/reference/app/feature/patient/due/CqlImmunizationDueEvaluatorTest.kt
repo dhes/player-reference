@@ -19,6 +19,7 @@ import dev.ohs.fhir.model.r4.Immunization
 import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.player.reference.app.util.FhirJson
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -51,6 +52,9 @@ class CqlImmunizationDueEvaluatorTest {
       val due = CqlImmunizationDueEvaluator.measlesMcv1Due(mary, emptyList(), today)
       assertNotNull(due, "a 12-month-old with no measles dose should be due for MCV1")
       assertEquals("Measles (MCV1)", due.label)
+      // WHO's verbatim Guidance define drives the tooltip.
+      assertNotNull(due.guidance, "the due chip should carry WHO's guidance text")
+      assertContains(due.guidance, "Should vaccinate client with MCV1")
     }
 
   @Test

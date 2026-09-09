@@ -32,10 +32,14 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -283,13 +287,30 @@ fun PatientProfileScreen(patientId: String, onBack: () -> Unit, onAddClinicalDat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImmunizationDueChip(recommendation: ImmunizationDue) {
-  AssistChip(
-    onClick = {},
-    label = { Text("Due: ${recommendation.label}") },
-    colors =
-      AssistChipDefaults.assistChipColors(
-        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
-      ),
-  )
+  val chip =
+    @Composable {
+      AssistChip(
+        onClick = {},
+        label = { Text("Due: ${recommendation.label}") },
+        colors =
+          AssistChipDefaults.assistChipColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
+          ),
+      )
+    }
+
+  val guidance = recommendation.guidance
+  if (guidance.isNullOrBlank()) {
+    chip()
+  } else {
+    // Hover (desktop) / long-press to reveal WHO's verbatim recommendation text.
+    TooltipBox(
+      positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+      tooltip = { PlainTooltip { Text(guidance) } },
+      state = rememberTooltipState(),
+    ) {
+      chip()
+    }
+  }
 }

@@ -37,6 +37,8 @@ object CqlImmunizationDueEvaluator : ImmunizationDueEvaluator {
 
   private const val ENTRY_CQL = "files/cql/IMMZD2DTMeaslesLowTransmissionLogic.cql"
   private const val DEFINE = "Client is due for MCV1"
+  // WHO's own recommendation text for the current state (a case expression over due/not-due).
+  private const val GUIDANCE_DEFINE = "Guidance"
 
   // The entry library's transitive `include` closure + FHIRHelpers 4.0.1 (not in the WHO package).
   private val INCLUDED_CQL =
@@ -87,9 +89,10 @@ object CqlImmunizationDueEvaluator : ImmunizationDueEvaluator {
         today = today,
       )
     // Single-library evaluator: no Expression.reference needed — its own entry library holds.
-    val result = evaluator().evaluate(ProtocolExpression.Elm(DEFINE), context)
+    val evaluator = evaluator()
+    val result = evaluator.evaluate(ProtocolExpression.Elm(DEFINE), context)
     return when (result.asBoolean()) {
-      true -> ImmunizationDue(label = "Measles (MCV1)")
+      true -> ImmunizationDue(label = "Measles (MCV1)", guidance = guidance(evaluator, context))
       false -> null
       null -> {
         // Fail safe: never render a "due" we could not compute — surface why in the log instead.
@@ -98,6 +101,14 @@ object CqlImmunizationDueEvaluator : ImmunizationDueEvaluator {
       }
     }
   }
+
+  /** WHO's verbatim guidance string for the current state; null (no tooltip) if unavailable. */
+  private suspend fun guidance(
+    evaluator: CqlExpressionEvaluator,
+    context: EvaluationContext,
+  ): String? =
+    evaluator.evaluate(ProtocolExpression.Elm(GUIDANCE_DEFINE), context).asValues().firstOrNull()
+      as? String
 
   /** Immunizations as a collection Bundle (the shape cxca-cql folds into the engine's data). */
   private fun collectionBundle(immunizations: List<Immunization>): Bundle {
