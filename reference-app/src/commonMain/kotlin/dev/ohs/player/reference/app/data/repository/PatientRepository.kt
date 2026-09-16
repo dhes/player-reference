@@ -94,10 +94,10 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
             it.conditionStatus != "active"
           },
         immunizations =
-          extractor.extract<PatientImmunizationState>(result).sortedByDescending {
-            // ISO-8601 string form sorts chronologically; undated entries sink to the bottom.
-            it.occurrenceDate?.toString() ?: ""
-          },
+          extractor
+            .extract<PatientImmunizationState>(result)
+            // Newest first; undated entries sink to the bottom.
+            .sortedWith(compareByDescending { it.occurrenceDate?.toInstant() }),
         procedures =
           extractor
             .extract<PatientProcedureState>(result)
@@ -121,7 +121,8 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
                 if (s.performedDate == null) s.copy(performedDate = dateById[s.procedureId]) else s
               }
             }
-            .sortedByDescending { it.performedDate?.toString() ?: "" },
+            // Newest first; undated entries sink to the bottom.
+            .sortedWith(compareByDescending { it.performedDate?.toInstant() }),
         familyHistory = extractor.extract<PatientFamilyHistoryState>(result),
         careTeam = extractor.extract<PatientCareTeamState>(result),
         contacts =
