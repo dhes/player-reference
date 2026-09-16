@@ -78,13 +78,12 @@ class PatientProfileScreenTest {
         "Family History",
         "Care Team",
       )
-      .forEach { text
-      ->
-      scrollable.performScrollToNode(hasText(text, ignoreCase = true))
-      assertTrue(
-        onAllNodesWithText(text, ignoreCase = true).fetchSemanticsNodes().isNotEmpty(),
-        "Expected to find '$text' after scrolling the patient profile",
-      )
-    }
+      .forEach { text ->
+        scrollable.performScrollToNode(hasText(text, ignoreCase = true))
+        assertTrue(
+          onAllNodesWithText(text, ignoreCase = true).fetchSemanticsNodes().isNotEmpty(),
+          "Expected to find '$text' after scrolling the patient profile",
+        )
+      }
   }
 }

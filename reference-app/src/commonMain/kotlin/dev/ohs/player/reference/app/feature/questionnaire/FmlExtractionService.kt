@@ -20,12 +20,12 @@ import org.litlfred.fmlrunner.FmlRunner
 import player_reference.reference_app.generated.resources.Res
 
 /**
- * StructureMap-based extraction of WHO smart-immunizations questionnaires via
- * fmlrunner — the extraction mechanism the published guideline itself declares
- * (Questionnaire targetStructureMap), executing WHO's .fml verbatim.
+ * StructureMap-based extraction of WHO smart-immunizations questionnaires via fmlrunner — the
+ * extraction mechanism the published guideline itself declares (Questionnaire targetStructureMap),
+ * executing WHO's .fml verbatim.
  *
- * The maps, the IMMZC4 logical model, and the sex ConceptMap are bundled
- * unmodified from the published IG (CC0) under files/fml/.
+ * The maps, the IMMZC4 logical model, and the sex ConceptMap are bundled unmodified from the
+ * published IG (CC0) under files/fml/.
  */
 object FmlExtractionService {
 
@@ -63,9 +63,8 @@ object FmlExtractionService {
         .also { runner = it }
 
   /**
-   * Runs the QR through [IMMZ_C4_MAP_URL] and returns the produced Bundle as a
-   * JSON string. Throws with the engine's error when execution fails — nothing
-   * fails silently.
+   * Runs the QR through [IMMZ_C4_MAP_URL] and returns the produced Bundle as a JSON string. Throws
+   * with the engine's error when execution fails — nothing fails silently.
    */
   suspend fun extractImmzC4(questionnaireResponseJson: String): String {
     val result = runner().executeStructureMap(IMMZ_C4_MAP_URL, questionnaireResponseJson)

@@ -26,14 +26,13 @@ import kotlin.test.assertNotNull
 import org.litlfred.fmlrunner.FmlRunner
 
 /**
- * Probe: StructureMap-based extraction of QIMMZC4 via fmlrunner, executing the
- * bundled WHO IMMZ.C4 maps verbatim (same registration set as
- * [FmlExtractionService], read from the bundled files directly since compose
- * Res isn't available under jvmTest).
+ * Probe: StructureMap-based extraction of QIMMZC4 via fmlrunner, executing the bundled WHO IMMZ.C4
+ * maps verbatim (same registration set as [FmlExtractionService], read from the bundled files
+ * directly since compose Res isn't available under jvmTest).
  *
- * Notably asserts sex→gender translation live — the path the template-extract
- * retrofit has to @Ignore (kotlin-fhir Enumeration drops primitive extensions),
- * FML extraction handles as WHO wrote it: translate(sex, IMMZ.C.ConceptMap).
+ * Notably asserts sex→gender translation live — the path the template-extract retrofit has
+ * to @Ignore (kotlin-fhir Enumeration drops primitive extensions), FML extraction handles as WHO
+ * wrote it: translate(sex, IMMZ.C.ConceptMap).
  */
 class QimmzC4FmlExtractionTest {
 
@@ -49,11 +48,12 @@ class QimmzC4FmlExtractionTest {
           "IMMZ.Helpers.fml",
         )
         .forEach {
-        val compiled = r.compileFml(File(fmlDir, it).readText())
-        r.registerStructureMap(
-          compiled.structureMap ?: error("$it failed to compile: ${compiled.errors.firstOrNull()}")
-        )
-      }
+          val compiled = r.compileFml(File(fmlDir, it).readText())
+          r.registerStructureMap(
+            compiled.structureMap
+              ?: error("$it failed to compile: ${compiled.errors.firstOrNull()}")
+          )
+        }
       r.registerConceptMap(File(fmlDir, "ConceptMap-IMMZ.C.ConceptMap.json").readText())
       r.registerStructureDefinition(File(fmlDir, "StructureDefinition-IMMZC4.json").readText())
     }
@@ -99,8 +99,7 @@ class QimmzC4FmlExtractionTest {
       .trimIndent()
 
   private fun extract(json: String = responseJson): Bundle {
-    val result =
-      runner.executeStructureMap(FmlExtractionService.IMMZ_C4_MAP_URL, json)
+    val result = runner.executeStructureMap(FmlExtractionService.IMMZ_C4_MAP_URL, json)
     check(result.success && result.result != null) {
       "FML extraction failed: ${result.errors.firstOrNull()}"
     }

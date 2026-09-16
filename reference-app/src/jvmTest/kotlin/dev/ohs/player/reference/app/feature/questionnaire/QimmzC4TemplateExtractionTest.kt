@@ -29,9 +29,9 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Probe: verifies the template-extraction retrofit of WHO smart-immunizations QIMMZC4
- * against the behavior specified by IMMZ.C4.LMToPatient.fml (Patient fields, sex-to-gender
- * translation, one RelatedPerson per caregiver group referencing the Patient).
+ * Probe: verifies the template-extraction retrofit of WHO smart-immunizations QIMMZC4 against the
+ * behavior specified by IMMZ.C4.LMToPatient.fml (Patient fields, sex-to-gender translation, one
+ * RelatedPerson per caregiver group referencing the Patient).
  */
 class QimmzC4TemplateExtractionTest {
 
@@ -113,11 +113,11 @@ class QimmzC4TemplateExtractionTest {
   }
 
   /**
-   * Documents an upstream blocker, not a template limitation: kotlin-fhir's Enumeration type
-   * drops primitive extensions on enum-bound fields at parse time, so the `_gender`
-   * templateExtractValue hole never reaches the extraction engine (verified by round-trip:
-   * `_gender` disappears on decode/encode while `_birthDate` survives). Un-ignore once the
-   * model preserves Element.id/extension on Enumeration primitives.
+   * Documents an upstream blocker, not a template limitation: kotlin-fhir's Enumeration type drops
+   * primitive extensions on enum-bound fields at parse time, so the `_gender` templateExtractValue
+   * hole never reaches the extraction engine (verified by round-trip: `_gender` disappears on
+   * decode/encode while `_birthDate` survives). Un-ignore once the model preserves
+   * Element.id/extension on Enumeration primitives.
    */
   @Ignore
   @Test
@@ -141,8 +141,7 @@ class QimmzC4TemplateExtractionTest {
     assertEquals("Grace", name.given.single().value)
     assertEquals("Okoro", name.family?.value)
 
-    val patientFullUrl =
-      bundle.entry.first { it.resource is Patient }.fullUrl?.value
+    val patientFullUrl = bundle.entry.first { it.resource is Patient }.fullUrl?.value
     assertEquals(
       patientFullUrl,
       relatedPerson.patient?.reference?.value,

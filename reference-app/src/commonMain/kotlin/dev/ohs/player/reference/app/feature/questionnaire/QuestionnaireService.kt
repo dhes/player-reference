@@ -65,7 +65,8 @@ private val BUNDLED_QUESTIONNAIRE_PATHS: Map<String, String> =
     QuestionnaireIds.HOUSEHOLD_REGISTRATION to
       "files/configs/Questionnaire-HouseholdRegistration.json",
     QuestionnaireIds.HOUSEHOLD_MEMBERS to "files/configs/Questionnaire-HouseholdMembers.json",
-    QuestionnaireIds.PATIENT_CLINICAL_DATA to "files/configs/Questionnaire-PatientClinicalData.json",
+    QuestionnaireIds.PATIENT_CLINICAL_DATA to
+      "files/configs/Questionnaire-PatientClinicalData.json",
     QuestionnaireIds.WHO_IMMZ_C4 to "files/configs/Questionnaire-QIMMZC4.json",
   )
 
